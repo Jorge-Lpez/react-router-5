@@ -2,10 +2,11 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    NavLink
+    NavLink,
+    Redirect
 } from "react-router-dom";
 import logo from '../logo.svg';
-  
+import { route } from "./routes";
 
 const Navigation = () => {
     return (
@@ -14,28 +15,30 @@ const Navigation = () => {
             <nav>
             <img src={logo} alt="React Logo"/>
               <ul>
-                <li>
-                  <NavLink to="/home" activeClassName="nav-active" exact>Home</NavLink>
-                </li>
-                <li>
-                  <NavLink to="/about" activeClassName="nav-active" exact>About</NavLink>
-                </li>
-                <li>
-                  <NavLink to="/users" activeClassName="nav-active" exact>Users</NavLink>
-                </li>
+                { route.map( ({to, name}) => (
+                   <li key={to}>
+                     <NavLink 
+                      to={to} 
+                      activeClassName="nav-active" 
+                      >{name}</NavLink>
+                   </li>
+                 ))
+                }
               </ul>
             </nav>
 
             <Switch>
-              <Route path="/home">
-                <h1>Home</h1>
-              </Route>
-              <Route path="/about">
-                <h2>about</h2>
-              </Route>
-              <Route path="/users">
-                <h2>Users</h2>
-              </Route>
+              { route.map( ({path, Component}) => (
+                <Route 
+                  key={path} 
+                  path={path}
+                  render= { () => <Component/>} 
+                >  
+                </Route>
+              ))
+              }
+
+              <Redirect to={route[0].path}/>
             </Switch>
           </div>
         </Router>
